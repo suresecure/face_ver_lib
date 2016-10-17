@@ -1,0 +1,4 @@
+#define FaceVerSrzn_MAJOR_VERSION (@FaceVerSrzn_MAJOR_VERSION@)
+#define FaceVerSrzn_MINOR_VERSION (@FaceVerSrzn_MINOR_VERSION@)
+#define FaceVerSrzn_PATCH_VERSION (@FaceVerSrzn_PATCH_VERSION@)
+#define FaceVerSrzn_VERSION_STRING "@FaceVerSrzn_VERSION@"
