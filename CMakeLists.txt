@@ -39,14 +39,21 @@ FIND_PACKAGE( OpenMP REQUIRED)
 
 configure_file(config.h.in "${CMAKE_CURRENT_BINARY_DIR}/config.h" @ONLY)
 
-#include_directories("../include")
+include_directories("./include")
 #link_directories("../lib")
 #set(FaceVerSrzn_LIBRARIES "face_ver_srzn;caffe;dlib")
 set(FaceVerSrzn_LIBRARIES "caffe;dlib")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 #add_executable(face_ver_srzn face_ver.cpp classifier.h classifier.cpp face_align.h face_align.cpp)
-add_executable(face_ver_srzn face_ver.cpp classifier.h classifier.cpp verification.h verification.cpp face_align.h face_align.cpp)
+add_executable(face_ver_srzn 
+    include/classifier.h 
+    include/verification.h 
+    include/face_align.h 
+    face_ver.cpp 
+    src/classifier.cpp 
+    src/verification.cpp 
+    src/face_align.cpp)
 #target_link_libraries(face_ver_srzn ${FaceVerSrzn_LIBRARIES} ${OpenCV_LIBRARIES} ${Boost_LIBRARIES} )
 #target_link_libraries(face_ver_srzn ${FaceVerSrzn_LIBRARIES} ${OpenCV_LIBRARIES} )
 target_link_libraries(face_ver_srzn ${OpenCV_LIBRARIES} caffe dlib)
