@@ -8,6 +8,10 @@
 //using namespace cv;
 //using namespace std;
 
+#ifndef M_PI
+define M_PI  3.14159265358979323846
+#endif
+
 namespace face_ver_srzn {
 const int FaceAlign::INNER_EYES_AND_BOTTOM_LIP[] =  {3, 39, 42, 57};
 const int FaceAlign::OUTER_EYES_AND_NOSE[] = {3, 36, 45, 33};
@@ -222,9 +226,12 @@ cv::Mat  FaceAlign::align(dlib::cv_image<dlib::bgr_pixel> &rgb_img,
     dlib::full_object_detection landmarks = this->predictor(rgb_img, bb);
 
     int nPoints = landmark_indices[0];
-    cv::Point2f src_points[nPoints];
-    cv::Point2f dst_points[nPoints];
-    cv::Point2f tp_points[nPoints];
+	/*cv::Point2f src_points[nPoints];
+	cv::Point2f dst_points[nPoints];
+	cv::Point2f tp_points[nPoints];*/
+	cv::Point2f * src_points = new cv::Point2f[nPoints];
+	cv::Point2f * dst_points = new cv::Point2f[nPoints];
+	cv::Point2f * tp_points = new cv::Point2f[nPoints];
 
     cv::Mat template_face = TEMPLATE;
     if (scale_factor > 0 && scale_factor < 1) {
@@ -362,7 +369,11 @@ cv::Mat  FaceAlign::align(dlib::cv_image<dlib::bgr_pixel> &rgb_img,
 
     cv::Mat warpedImg = dlib::toMat(rgb_img);
     cv::warpAffine(warpedImg, warpedImg, H, cv::Size(img_dim, img_dim));
-    return warpedImg;
+    
+	delete[] src_points;
+	delete[] dst_points;
+	delete[] tp_points;
+	return warpedImg;
 }
 
 cv::Mat  FaceAlign::align(dlib::cv_image<dlib::bgr_pixel> &rgb_img,
@@ -379,9 +390,12 @@ cv::Mat  FaceAlign::align(dlib::cv_image<dlib::bgr_pixel> &rgb_img,
     dlib::full_object_detection landmarks = this->predictor(rgb_img, bb);
 
     int nPoints = landmark_indices[0];
-    cv::Point2f src_points[nPoints];
-    cv::Point2f dst_points[nPoints];
-    cv::Point2f tp_points[nPoints];
+	/*cv::Point2f src_points[nPoints];
+	cv::Point2f dst_points[nPoints];
+	cv::Point2f tp_points[nPoints];*/
+	cv::Point2f * src_points = new cv::Point2f[nPoints];
+	cv::Point2f * dst_points = new cv::Point2f[nPoints];
+	cv::Point2f * tp_points = new cv::Point2f[nPoints];
 
     cv::Mat template_face = TEMPLATE;
     if (scale_factor > 0 && scale_factor < 1) {
@@ -518,6 +532,11 @@ cv::Mat  FaceAlign::align(dlib::cv_image<dlib::bgr_pixel> &rgb_img,
 
     cv::Mat warpedImg = dlib::toMat(rgb_img);
     cv::warpAffine(warpedImg, warpedImg, H, cv::Size(img_dim, img_dim));
+
+	delete [] src_points;
+	delete[] dst_points;
+	delete[] tp_points;
+
     return warpedImg;
 }
 
@@ -544,9 +563,12 @@ cv::Rect  FaceAlign::detectAlignCropLigntenedCNNMxnet(cv::Mat & cv_img,
 
     int nPoints = landmark_indices[0];
     assert(3==nPoints);
-    cv::Point2f src_points[nPoints];
+    /*cv::Point2f src_points[nPoints];
     cv::Point2f dst_points[nPoints];
-    cv::Point2f tp_points[nPoints];
+    cv::Point2f tp_points[nPoints];*/
+	cv::Point2f * src_points = new cv::Point2f[nPoints];
+	cv::Point2f * dst_points = new cv::Point2f[nPoints];
+	cv::Point2f * tp_points = new cv::Point2f[nPoints];
 
     cv::Mat template_face = MINMAX_TEMPLATE;
 
@@ -588,6 +610,10 @@ cv::Rect  FaceAlign::detectAlignCropLigntenedCNNMxnet(cv::Mat & cv_img,
     cv::Mat H = cv::getAffineTransform(src_points, dst_points);
     // Align and crop.
     cv::warpAffine(cv_img, face, H, cv::Size(crop_size, crop_size));
+
+	delete [] src_points;
+	delete[] dst_points;
+	delete[] tp_points;
     return rect;
 }
 
@@ -614,8 +640,10 @@ cv::Rect  FaceAlign::detectAlignCropLigntenedCNNOrigin(cv::Mat & cv_img,
 
     int nPoints = landmark_indices[0];
     assert(5==nPoints);
-    cv::Point2f src_points[nPoints];
-    cv::Point2f dst_points[nPoints];
+    /*cv::Point2f src_points[nPoints];
+    cv::Point2f dst_points[nPoints];*/
+	cv::Point2f * src_points = new cv::Point2f[nPoints];
+	cv::Point2f * dst_points = new cv::Point2f[nPoints];
 
     cv::Mat template_face = MINMAX_TEMPLATE;
 
@@ -677,6 +705,9 @@ cv::Rect  FaceAlign::detectAlignCropLigntenedCNNOrigin(cv::Mat & cv_img,
     cv::Mat face_in_image = im_warp(cv::Range(box[2], box[3]), cv::Range(box[0], box[1]));
     face_in_image.copyTo(face(cv::Range(box[2] - crop_y, box[3] - crop_y),
             cv::Range(box[0] - crop_x, box[1] - crop_x)));
+
+	delete[] src_points;
+	delete[] dst_points;
 
     return rect;
 }
