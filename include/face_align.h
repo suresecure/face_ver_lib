@@ -50,7 +50,7 @@ public:
     cv::Rect getLargestFaceBoundingBox(cv::Mat & rgb_img);
     dlib::full_object_detection getLargestFaceLandmarks(dlib::cv_image<dlib::bgr_pixel> & rgb_img);
     std::vector<cv::Point2f> getLargestFaceLandmarks(cv::Mat & rgb_img);
-    cv::vector<dlib::full_object_detection> getAllFaceLandmarks(dlib::cv_image<dlib::bgr_pixel> & rgb_img);
+    std::vector<dlib::full_object_detection> getAllFaceLandmarks(dlib::cv_image<dlib::bgr_pixel> & rgb_img);
     std::vector<std::vector<cv::Point2f> > getAllFaceLandmarks(cv::Mat & rgb_img);
     // Find face landmarks.
     std::vector<dlib::point> findLandmarks(dlib::cv_image<dlib::bgr_pixel> &rgb_img, dlib::rectangle bb);
