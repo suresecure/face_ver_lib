@@ -92,13 +92,92 @@ int main(int argc, char **argv) {
     }
     */
 
+    
+    /*
     // Test face align.
     FaceAlign align(align_model_path);
     Mat img = imread(image_not_align_path);
     Mat face;
-    align.detectAlignCropLigntenedCNNOrigin(img, face);
+    Rect face_rect = align.detectAlignCropLigntenedCNNOrigin(img, face);
+    if (face_rect.area() > 0) {
+        imshow("face", face);
+        waitKey(-1); 
+    }*/
+
+    // Test face align for ID image.
+    FaceAlign align(align_model_path);
+    Mat img = imread("/home/robert/myCoding/suresecure/dataset/IDSamplePhoto/origin/id/430681199412212619-0.jpg");
+    Mat face;
+    Rect ave_face_rect(13.18, 31.42, 71.88, 71.88);
+    Rect face_rect = align.detectAlignCropLigntenedCNNOrigin(img, face);
+    if (face_rect.area() <= 0) {
+        // Dlib face detector cannot detect face. Use average face rect instead.
+        face_rect = align.detectAlignCropLigntenedCNNOrigin(img, face, 128, 48, 40, ave_face_rect);
+    }
     imshow("face", face);
-    waitKey(-1);
+    waitKey(-1); 
+
+    /*
+    // Align and save face.
+    string to_be_align_image_list_path = string("/home/robert/myCoding/suresecure/dataset/IDSamplePhoto/filename.txt");
+    vector<string> image_list;
+    int num_images = readImageList(to_be_align_image_list_path, image_list);
+    FaceAlign align(align_model_path);
+    for (int i = 0; i < num_images; i++ ) {
+        string fname = image_list[i];
+        Mat img = imread(fname);
+        Mat face;
+        //// For training
+        //Rect face_rect = align.detectAlignCropLigntenedCNNOrigin(img, face, 144, 48, 48);
+        // For testing
+        Rect face_rect = align.detectAlignCropLigntenedCNNOrigin(img, face);
+        if (face_rect.area() <= 0 && fname.find("/id/") >= 0 ){
+            // ID image
+            // Dlib face detector cannot detect face. Use average face rect instead.
+            Rect ave_face_rect(13.18, 31.42, 71.88, 71.88);
+            face_rect = align.detectAlignCropLigntenedCNNOrigin(img, face, 128, 48, 40, ave_face_rect);
+        }
+        if (face_rect.area() <= 0){
+            remove(fname.c_str());
+            //cerr<<"ERROR: DETECT FAIL: "<<fname<<endl;
+            cerr<<fname<<endl;
+        }
+        else {
+            imwrite(fname, face);
+            cout<<fname<<endl;
+        }
+    }*/
+
+    /*
+    // Average rect of ID images.
+    string to_be_align_image_list_path = string("/home/robert/myCoding/suresecure/dataset/IDSamplePhoto/id.txt");
+    vector<string> image_list;
+    int num_images = readImageList(to_be_align_image_list_path, image_list);
+    FaceAlign align(align_model_path);
+    float x1=0, x2=0, y1=0, y2=0;
+    for (int i = 0; i < num_images; i++ ) {
+        string fname = image_list[i];
+        Mat img = imread(fname);
+        Mat face;
+        // For testing
+        Rect face_rect = align.detectAlignCropLigntenedCNNOrigin(img, face);
+        if (face_rect.area() <= 0){
+            cerr<<"ERROR: DETECT FAIL: "<<fname<<endl;
+        }
+        else {
+            x1 += face_rect.x;
+            x2 += face_rect.width;
+            y1 += face_rect.y;
+            y2 += face_rect.height;
+            cout<<fname<<endl;
+        }
+    }
+    x1 /= num_images;
+    x2 /= num_images;
+    y1 /= num_images;
+    y2 /= num_images;
+    cout<<"Average face rect of ID images: "<<x1<<", "<<x2<<", "<<y1<<", "<<y2<<endl;
+    */
 
     return 0;
 }
